@@ -1,10 +1,9 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import ChatArea from "@/components/ChatArea/ChatArea";
+import Header from "@/components/Header/Header";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import Markdown from 'react-markdown'
 
 const page = () => {
   const [chat, setChat] = useState([]);
@@ -89,50 +88,19 @@ const page = () => {
     fetchChatHistory();
   }, []);
   
-  const formatTime = (date) => {
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace('am', 'AM').replace('pm', 'PM');
-  }
-
   // Auto-scroll to bottom when messages change
   const messagesEndRef = useRef(null)
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [chat])
 
+  
+
   return (
     <>
       <div className="mx-auto p-4">
-        <h1 className="text-2xl text-slate-500 font-bold mb-4">aGroww AI</h1>
-        <ScrollArea>
-          <div className="bg-gray-50 h-[65vh] max-w-[80vw] mx-auto overflow-y-auto p-3 space-y-10 py-6 rounded shadow mb-4">
-            {chat?.map((msg, idx) => (
-                // Displaying the messages
-                <div key={idx} className={`flex items-start gap-4 my-2 ${msg.sender === "user" ? "text-right justify-end" : "text-left justify-start"}`}>
-                  {msg.sender === "bot" && 
-                    <Avatar>
-                      <AvatarImage src="https://i.pravatar.cc/100?img=70" alt="@shadcn" />
-                      <AvatarFallback>BOT</AvatarFallback>
-                    </Avatar>
-                  }
-
-                  <span className={`shadow-md flex flex-col gap-y-2 max-w-[60vw] px-6 py-4 rounded-xl ${msg.sender === "user" ? "bg-green-500 rounded-tr-none text-background" : "bg-slate-200 rounded-tl-none text-foreground"}`}>
-                    <Markdown>{msg.message}</Markdown>
-                    <span className={`text-xs pt-4 ${msg.sender === "user" ? "text-background self-end" : "text-foreground self-start"}`}>
-                      {formatTime(new Date(msg.timestamp))}
-                    </span>
-                  </span>
-
-                  {msg.sender === "user" && 
-                    <Avatar>
-                      <AvatarImage src="https://i.pravatar.cc/100?img=60" alt="@shadcn" />
-                      <AvatarFallback>USER</AvatarFallback>
-                    </Avatar>
-                  }
-                </div>
-            ))}
-            <div ref={messagesEndRef} ></div>
-          </div>
-        </ScrollArea>
+        <Header />
+        <ChatArea chat={chat} messagesEndRef={messagesEndRef} />
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <div className="flex gap-2 border p-6 rounded-lg shadow-md max-w-[80vw] mx-auto">
@@ -143,7 +111,7 @@ const page = () => {
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               placeholder="Type your message here..."
             />
-            <Button onClick={sendMessage} className="bg-green-500 hover:bg-green-800 text-white py-6 rounded-full"> 
+            <Button onClick={sendMessage} className="bg-green-700 text-white py-6 rounded-full"> 
               <Send /> 
             </Button>
           </div>

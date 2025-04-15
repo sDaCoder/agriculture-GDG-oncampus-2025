@@ -1,4 +1,5 @@
 "use client"
+import { SignInButton, SignUpButton, SignedOut, SignedIn, UserButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -16,6 +17,13 @@ export default function Home() {
   return (
     <>
       <div className="text-blue-700">
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
         <h1>This is an API Call</h1>
         <h2 className="font-bold">Message from Python: {message}</h2>
       </div>
