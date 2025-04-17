@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollArea } from '../ui/scroll-area'
 import Markdown from 'react-markdown'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { getUser } from '@/actions/userActions'
 
 const ChatArea = ({chat, messagesEndRef}) => {
 
     const formatTime = (date) => {
         return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true }).replace('am', 'AM').replace('pm', 'PM');
     }
+
+    // Fetching the details of the logged in user
+    const [user, setUser] = useState(null)
+    useEffect(() => {
+      const fetchUser = async () => {
+        const user = await getUser()
+        setUser(user)
+      }
+      fetchUser()
+    }, [])
+    
     
   return (
     <>
@@ -32,7 +44,7 @@ const ChatArea = ({chat, messagesEndRef}) => {
 
                   {msg.sender === "user" && 
                     <Avatar>
-                      <AvatarImage src="https://i.pravatar.cc/100?img=60" alt="@shadcn" />
+                      <AvatarImage src={user?.imageUrl} alt="@shadcn" />
                       <AvatarFallback>USER</AvatarFallback>
                     </Avatar>
                   }
