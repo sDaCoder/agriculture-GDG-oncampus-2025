@@ -99,7 +99,7 @@ const page = () => {
   return (
     <>
       <div className="mx-auto p-4">
-        <Header />
+        {/* <Header /> */}
         <ChatArea chat={chat} messagesEndRef={messagesEndRef} />
 
         <div className="absolute bottom-0 left-0 right-0 p-4">

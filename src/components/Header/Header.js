@@ -1,9 +1,12 @@
+"use client"
 import React from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 const Header = () => {
+    const router = useRouter()
     return (
         <>
             <div className="flex items-center justify-around mt-2">
@@ -16,7 +19,13 @@ const Header = () => {
                     </SignedIn>
                     <SignedOut>
                         <div className="flex items-center gap-x-4">
-                            <Button onClick={() => window.location.href = "/sign-in"}>Sign In</Button>
+                            {/* <Button><Link href={"/sign-in"}>Sign In</Link></Button> */}
+                            <Button onClick={() => router.push("/sign-in")} className="bg-green-700 hover:bg-green-900 py-2 px-8 font-semibold">
+                                Log In
+                            </Button>
+                            <Button onClick={() => router.push("/sign-up")} className="bg-green-700 hover:bg-green-900 py-2 px-8 font-semibold">
+                                Sign Up
+                            </Button>
                         </div>
                     </SignedOut>
                 </div>
