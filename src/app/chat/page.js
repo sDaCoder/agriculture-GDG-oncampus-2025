@@ -1,21 +1,20 @@
 "use client";
 import ChatArea from "@/components/ChatArea/ChatArea";
-import Header from "@/components/Header/Header";
-import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import ChatInputBox from "@/components/ChatInputBox/ChatInputBox";
+import Warnings from "@/components/Warnings/Warnings";
+import { useState, useEffect } from "react";
 
 const page = () => {
   const [chat, setChat] = useState([]);
   const [input, setInput] = useState("");
 
   const sendMessage = async () => {
-    if (!input.trim()){
+    if (!input.trim()) {
       setInput(input.trim());
       return;
     }
-    const userMessage = { 
-      sender: "user", 
+    const userMessage = {
+      sender: "user",
       message: input,
       timestamp: new Date().toISOString(),
     };
@@ -28,7 +27,7 @@ const page = () => {
     await fetch("/api/py/chat/save", {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json',       
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(userMessage),
     }).catch((err) => {
@@ -40,7 +39,7 @@ const page = () => {
       const res = await fetch("/api/py/chat", {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',       
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ message: input }),
       });
@@ -50,9 +49,9 @@ const page = () => {
         throw new Error("Server Error: " + errorText);
       }
       const data = await res.json();
-      
-      const botMessage = { 
-        sender: "bot", 
+
+      const botMessage = {
+        sender: "bot",
         message: data.message,
         timestamp: new Date().toISOString(),
       };
@@ -62,7 +61,7 @@ const page = () => {
       await fetch("/api/py/chat/save", {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',       
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(botMessage),
       })
@@ -78,50 +77,28 @@ const page = () => {
     const fetchChatHistory = async () => {
       try {
         const res = await fetch("/api/py/chat/all");
-          if (!res.ok) throw new Error("Failed to fetch messages");
-          const data = await res.json();
-          setChat(data);
+        if (!res.ok) throw new Error("Failed to fetch messages");
+        const data = await res.json();
+        setChat(data);
       } catch (error) {
         console.error("Error fetching chat history:", error);
       }
     }
     fetchChatHistory();
   }, []);
-  
-  // Auto-scroll to bottom when messages change
-  const messagesEndRef = useRef(null)
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [chat])
 
-  
+
+
 
   return (
     <>
-      <div className="mx-auto p-4">
+      <div className="container mx-auto">
         {/* <Header /> */}
-        <ChatArea chat={chat} messagesEndRef={messagesEndRef} />
-
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <div className="flex gap-2 border p-6 rounded-lg shadow-md max-w-[80vw] mx-auto">
-            <input
-              className="flex-1 border rounded-lg px-3 py-2 text-black border-none"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              placeholder="Type your message here..."
-            />
-            <Button onClick={sendMessage} className="bg-green-700 text-white py-6 rounded-full"> 
-              <Send /> 
-            </Button>
-          </div>
-          <div className="mt-2 text-xs text-muted-foreground text-center select-none">
-            <span className="text-red-500">Note: </span>
-            This is a demo version of aGroww AI. Please do not share any sensitive information.
-            <br />
-            AI responses are generated based on the input provided and may not always be accurate.
-            <br />
-          </div>
+        <ChatArea chat={chat} />
+        
+        <div className="md:static absolute bottom-0 w-full py-4">
+          <ChatInputBox input={input} setInput={setInput} sendMessage={sendMessage} />
+          <Warnings />
         </div>
       </div>
     </>

@@ -3,9 +3,7 @@ import { getUser } from "@/actions/userActions";
 import { Button } from "@/components/ui/button";
 import { SignedOut } from "@clerk/nextjs";
 import { SignedIn } from "@clerk/nextjs";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -26,20 +24,21 @@ export default function Home() {
 
   return (
     <>
-      <div className="text-blue-700">
+      {/* <div className="text-blue-700">
         <h1>This is an API Call</h1>
         <Link href="/chat">Click me to chat</Link>
-      </div>
+      </div> */}
 
       
       <div className="h-[50vh] flex flex-col items-center justify-center">
         <SignedIn>
           <h1 className="text-5xl text-slate-500 font-bold">Welcome Back</h1>
           <h2 className="text-5xl text-slate-500 font-bold">{user?.firstName || user?.username}</h2>
+          <Button onClick={() => router.push("/chat")} className='bg-green-700 hover:bg-green-900 my-4'>Start Chatting</Button>
         </SignedIn>
 
         <SignedOut>
-            <Button onClick={() => router.push("/sign-in")} className='bg-green-700 hover:bg-green-900'>Get Started for free</Button>
+            <Button onClick={() => router.push("/chat")} className='bg-green-700 hover:bg-green-900'>Get Started for free</Button>
         </SignedOut>
       </div>
       
